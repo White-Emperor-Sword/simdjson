@@ -33,7 +33,34 @@ namespace logger {
     }
   }
 
-  // Logs a single line of 
+  static really_inline void log_string(const char *message) {
+    if (LOG_ENABLED) {
+      printf("%s\n", message);
+    }
+  }
+
+  // Logs a single line from the on-demand parser
+  template<int DELTA=-1, typename T>
+  static really_inline void log_ondemand_line(T &json, const char *title_prefix, const char *title, const char *detail) {
+    if (LOG_ENABLED) {
+      printf("| %*s%s%-*s ", log_depth*2, "", title_prefix, LOG_EVENT_LEN - log_depth*2 - int(strlen(title_prefix)), title);
+      {
+        // Print the next N characters in the buffer.
+        printf("| ");
+        for (int i=0;i<LOG_BUFFER_LEN;i++) {
+          printf("%c", printable_char(json.peek(DELTA)[i]));
+        }
+        printf(" ");
+      }
+      printf("|    %c ", printable_char(*json.peek(DELTA+1)));
+      printf("| %5u ", json.peek_index(DELTA+1));
+      // printf("| %5d ", json.depth);
+      printf("| %-s ", detail);
+      printf("|\n");
+    }
+  }
+
+  // Logs a single line from the stage 2 DOM parser
   template<typename S>
   static really_inline void log_line(S &structurals, const char *title_prefix, const char *title, const char *detail) {
     if (LOG_ENABLED) {

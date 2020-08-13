@@ -123,4 +123,6 @@ WARN_UNUSED error_code dom_parser_implementation::parse(const uint8_t *_buf, siz
 } // namespace SIMDJSON_IMPLEMENTATION
 } // unnamed namespace
 
+#include "generic/ondemand.h"
+
 #include "haswell/end_implementation.h"
